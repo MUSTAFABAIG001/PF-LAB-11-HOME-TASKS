@@ -26,7 +26,7 @@ void main() {
     char date[15];
 
     while(1) {
-        printf("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Check Details & Interest\n5. Exit\n");
+        printf("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. Check Details\n5. Exit\n");
         printf("Choice: ");
         scanf("%d", &choice);
 
@@ -38,23 +38,47 @@ void main() {
             printf("Type (Savings/Current/Fixed): ");
             scanf("%s", a[count].type);
             
-            int ok = 0;
-            do {
-                printf("Initial Balance: ");
+            while(1) {
+                printf("Enter Initial Balance: ");
                 scanf("%f", &a[count].balance);
                 
-                if(strcmp(a[count].type, "Savings") == 0 && a[count].balance >= 1000) ok = 1;
-                else if(strcmp(a[count].type, "Current") == 0 && a[count].balance >= 5000) ok = 1;
-                else if(strcmp(a[count].type, "Fixed") == 0 && a[count].balance >= 10000) ok = 1;
-                else printf("Balance too low for account type.\n");
-            } while(ok == 0);
+                int valid = 0;
+                
+                if(strcmp(a[count].type, "Savings") == 0) {
+                    if(a[count].balance >= 1000) {
+                        valid = 1;
+                    } else {
+                        printf("Error: Savings needs minimum $1000\n");
+                    }
+                }
+                else if(strcmp(a[count].type, "Current") == 0) {
+                    if(a[count].balance >= 5000) {
+                        valid = 1;
+                    } else {
+                        printf("Error: Current needs minimum $5000\n");
+                    }
+                }
+                else if(strcmp(a[count].type, "Fixed") == 0) {
+                    if(a[count].balance >= 10000) {
+                        valid = 1;
+                    } else {
+                        printf("Error: Fixed Deposit needs minimum $10000\n");
+                    }
+                }
+                else {
+                    printf("Invalid Account Type entered. Setting valid to exit loop but check type again next time.\n");
+                    valid = 1; 
+                }
+
+                if(valid == 1) break;
+            }
 
             printf("Creation Date (dd/mm/yyyy): ");
             scanf("%s", a[count].createDate);
             strcpy(a[count].lastTransDate, a[count].createDate);
             a[count].transCount = 0;
             count++;
-            printf("Account Created.\n");
+            printf("Account Created Successfully.\n");
         }
         else if(choice == 2) {
             printf("Enter Account Num: ");
@@ -88,9 +112,22 @@ void main() {
                     found = 1;
                     printf("Amount to withdraw: ");
                     scanf("%f", &amt);
-                    if(a[i].balance - amt < 0) {
+                    
+      
+                    float remaining = a[i].balance - amt;
+                    int canWithdraw = 1;
+
+                    if(strcmp(a[i].type, "Savings") == 0 && remaining < 1000) canWithdraw = 0;
+                    if(strcmp(a[i].type, "Current") == 0 && remaining < 5000) canWithdraw = 0;
+                    if(strcmp(a[i].type, "Fixed") == 0 && remaining < 10000) canWithdraw = 0;
+
+                    if(canWithdraw == 0) {
+                        printf("Cannot withdraw. Balance will fall below minimum.\n");
+                    } 
+                    else if(remaining < 0) {
                         printf("Insufficient funds.\n");
-                    } else {
+                    } 
+                    else {
                         printf("Date: ");
                         scanf("%s", date);
                         a[i].balance -= amt;

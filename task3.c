@@ -70,4 +70,60 @@ int main() {
                 else if (strcmp(e[i].dept, "Operations") == 0) op += e[i].salary;
             }
 
-            printf("\nDepartment Sa
+            printf("\nDepartment Salary Totals:\n");
+            printf("IT: %.2f\nHR: %.2f\nFinance: %.2f\nMarketing: %.2f\nOperations: %.2f\n",
+                   it, hr, fin, mar, op);
+        }
+
+        else if (choice == 3) {
+            int eid;
+            float inc;
+
+            printf("Enter employee ID: ");
+            scanf("%d", &eid);
+
+            for (i = 0; i < n; i++) {
+                if (e[i].id == eid) {
+                    printf("Current Salary: %.2f\n", e[i].salary);
+                    printf("Increment percentage (5-15): ");
+                    scanf("%f", &inc);
+
+                    e[i].salary += e[i].salary * (inc / 100);
+                    printf("New Salary: %.2f\n", e[i].salary);
+                    break;
+                }
+            }
+        }
+
+        else if (choice == 4) {
+            printf("\nEmployees eligible for promotion (>3 years):\n");
+            for (i = 0; i < n; i++) {
+                if (e[i].exp > 3) {
+                    printf("%s | %s | Experience: %d years\n",
+                        e[i].name, e[i].desig, e[i].exp);
+                }
+            }
+        }
+
+        else if (choice == 5) {
+            printf("Search by department/designation/experience: ");
+            scanf(" %[^\n]", searchStr);
+
+            for (i = 0; i < n; i++) {
+                if (strcmp(e[i].dept, searchStr) == 0 ||
+                    strcmp(e[i].desig, searchStr) == 0 ||
+                    e[i].exp == atoi(searchStr)) 
+                {
+                    printf("%s | %s | %s | Exp: %d\n",
+                        e[i].name, e[i].dept, e[i].desig, e[i].exp);
+                }
+            }
+        }
+
+        else if (choice == 6) {
+            break;
+        }
+    }
+
+    return 0;
+}
